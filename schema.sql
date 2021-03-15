@@ -1,0 +1,14 @@
+-- client {
+--     id
+--     genre
+--     playlist: [idMovie, ...]
+--     like: [idMovie, ...]
+--     seen: [idMovie, ...]
+-- }
+
+-- movie {
+--     id
+--     title
+--     description
+--     genre
+-- }
