@@ -26,6 +26,8 @@ services:
     build: ./api
     ports:
       - "5001:80"
+    environment:
+      FLASK_DEBUG: 1
   web:
     restart: always
     depends_on:
