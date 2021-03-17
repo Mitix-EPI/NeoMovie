@@ -136,7 +136,7 @@ class API(object):
             else:
                 return False
         except Exception as e :
-            print("error : userLikeMovie\n" + e, flush=True)
+            print("error : userLikeMovie\n" + str(e), flush=True)
             return False
 
     def getMovieSeenByUser(self, userId):
@@ -144,20 +144,34 @@ class API(object):
         try:
             cursor = self.conn.cursor()
             cursor.execute("""SELECT * FROM seen_movie WHERE id_user = %s""", (userId))
-            account = cursor.fetchone()
+            account = cursor.fetchall()
             cursor.close()
             if (account):
-                movieId = account[1]
-                movie = self.getMovieById(movieId)
-                if movie:
-                    res['result'] = movie
-                else:
-                    res['error'] = "internal error"
+                result = []
+                for row in account:
+                    result.append(self.getMovieById(row[1]))
+                res['result'] = result
+            else:
+                res['error'] = "Not movie already seen"
+            return res
+        except Exception as e :
+            print("error : userLikeMovie\n" + str(e), flush=True)
+            return False
+
+    def getMovieByGenre(self, genre):
+        res = {}
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("""SELECT * FROM movie WHERE genre = %s""", (genre))
+            account = cursor.fetchall()
+            cursor.close()
+            print(account, flush=True)
+            if (account):
+                res['result'] = account
             else:
                 res['error'] = "Not movie already seen"
             return res
         except Exception as e :
             print("error : userLikeMovie\n" + e, flush=True)
             return False
-
 

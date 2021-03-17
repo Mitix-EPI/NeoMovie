@@ -95,6 +95,20 @@ def getMovieSeenByUser():
         }
         return jsonify(error)
 
+@app.route('/api/getMoviesByGenre', methods=['GET'])
+def getMovieByGenre():
+    api = API(app, get_connection())
+    try:
+        genre = request.args['genre']
+        return api.getMovieByGenre(genre)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
 if __name__ == '__main__':
     app.secret_key = 'taker'
     app.permanent_session_lifetime = timedelta(minutes=5)
