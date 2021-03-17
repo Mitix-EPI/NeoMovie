@@ -29,7 +29,8 @@ PRIMARY KEY(`id_user`, `id_movie`)
 
 CREATE TABLE IF NOT EXISTS `playlist` (
     `id_user` INT NOT NULL,
-    `id_playlist` INT NOT NULL,
+    `id_playlist` INT AUTO_INCREMENT NOT NULL,
+    `title` VARCHAR(255) NOT NULL,
 PRIMARY KEY(`id_user`, `id_playlist`)
 );
 
