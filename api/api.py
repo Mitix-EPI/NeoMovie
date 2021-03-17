@@ -14,6 +14,20 @@ class API(object):
         self.app = app
         self.conn = conn
 
+    def getIdFromEmail(self, email):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM user WHERE email = '%s'" % (email))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                return str(account[0])
+            else:
+                return "error"
+        except Exception as e :
+            print("error : getIdFromEmail\n" + e, flush=True)
+            return "error"
+
     def checkAccountExists(self, email):
         try:
             cursor = self.conn.cursor()
@@ -43,28 +57,18 @@ class API(object):
     def loginAccount(self, email, password):
         res = {}
         try:
-            print('Login Start', flush=True)
             cursor = self.conn.cursor()
             cursor.execute("""SELECT * FROM user WHERE email = %s""", (email))
-            print('Login executed', flush=True)
             account = cursor.fetchone()
             cursor.close()
-            print('Login cursor close', flush=True)
             if (account):
-                print('Login checking password', flush=True)
                 if verifyHash(password, account[2]):
-                    print('password correct !', flush=True)
-                    print(account, flush=True)
                     session['loggedin'] = True
-                    print('DEBUGG 1', flush=True)
                     session['id'] = account[0]
-                    print('DEBUGG 2', flush=True)
                     session['email'] = account[1]
-                    print('DEBUGG 3', flush=True)
                     res['result'] = "login successful"
-                    print('return Login', res, flush=True)
+                    res['id'] = self.getIdFromEmail(email)
                     return res
-                print('not good password', flush=True)
                 res['error'] = "login or password does not match"
                 return res
             else:
@@ -85,9 +89,7 @@ class API(object):
 
     def register(self, email, password, genre):
         res = {}
-        print('TEST BEFORE REGISTER', flush=True)
         isExists = self.checkAccountExists(email)
-        print('TEST REGISTER', flush=True)
         if isExists:
             res['error'] = "account already exists"
         else:
@@ -98,4 +100,64 @@ class API(object):
     def login(self, email, password):
         res = self.loginAccount(email, password)
         return jsonify(res)
+
+    def userSeesMovieUpdate(self, userId, movieId):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("INSERT INTO %s (id_user, id_movie) VALUES ('%s', '%s')" % ("seen_movie", userId, movieId))
+            self.conn.commit()
+            cursor.close()
+            return True
+        except Exception as e :
+            print("error : userSeesMovie\n" + e, flush=True)
+            return False
+
+    def userSeesMovie(self, userId, movieId):
+        res = {}
+        try:
+            boolean = self.userSeesMovieUpdate(userId, movieId)
+            if boolean:
+                res['result'] = "Movie Seen"
+            else:
+                res['error'] = "Error"
+            return res
+        except Exception as e :
+            print("error : userLikeMovie\n" + e, flush=True)
+            return False
+
+    def getMovieById(self, movieId):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("""SELECT * FROM movie WHERE id = %s""", (movieId))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                return account
+            else:
+                return False
+        except Exception as e :
+            print("error : userLikeMovie\n" + e, flush=True)
+            return False
+
+    def getMovieSeenByUser(self, userId):
+        res = {}
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("""SELECT * FROM seen_movie WHERE id_user = %s""", (userId))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                movieId = account[1]
+                movie = self.getMovieById(movieId)
+                if movie:
+                    res['result'] = movie
+                else:
+                    res['error'] = "internal error"
+            else:
+                res['error'] = "Not movie already seen"
+            return res
+        except Exception as e :
+            print("error : userLikeMovie\n" + e, flush=True)
+            return False
+
 

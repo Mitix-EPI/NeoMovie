@@ -40,11 +40,8 @@ def register():
 def login():
     api = API(app, get_connection())
     try:
-        print("Login before get requests", flush=True)
         email = request.args['email']
         password = request.args['password']
-        print(email, flush=True)
-        print(password, flush=True)
         return api.login(email, password)
     except Exception as e:
         print(e)
@@ -64,6 +61,37 @@ def logout():
         error = {
             'status': 'Error',
             'message': 'Error logout'
+        }
+        return jsonify(error)
+
+@app.route('/api/movieSeen', methods=['POST'])
+def movieSeen():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        movieId = request.args['movieId']
+        print(userId, flush=True)
+        print(movieId, flush=True)
+        return api.userSeesMovie(userId, movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/getMovieSeen', methods=['GET'])
+def getMovieSeenByUser():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        return api.getMovieSeenByUser(userId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
         }
         return jsonify(error)
 
