@@ -41,6 +41,7 @@ PRIMARY KEY(`id_playlist`, `id_movie`)
 
 INSERT INTO `movie` (`title`, `description`, `date`, `language`, `genre`, `trailer`)
     VALUES ('Sausage Party', "Une petite saucisse s'embraque dans une dangereuse quête pour découvrir les origines de son existence...", '2016-11-30', 'English', 'Humor', 'https://www.youtube.com/watch?v=WVAcTZKTgmc'),
+    ('BLOP', "Une petite saucisse s'embraque dans une dangereuse quête pour découvrir les origines de son existence...", '2016-11-30', 'English', 'Humor', 'https://www.youtube.com/watch?v=WVAcTZKTgmc'),
     ('Inception', "Dom Cobb est un voleur expérimenté: sa spécialité consiste à s'approprier les secrets les plus précieux d'un individu pendant qu'il rêve.", '2010-07-21', 'English', 'Science Fiction', 'https://www.youtube.com/watch?v=YoHD9XEInc0');
 
 INSERT INTO `user` (email, password, genre) VALUES
