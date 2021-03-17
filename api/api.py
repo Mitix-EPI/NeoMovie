@@ -175,3 +175,106 @@ class API(object):
             print("error : userLikeMovie\n" + e, flush=True)
             return False
 
+    def userLikesMovie(self, userId, movieId):
+        res = {}
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("INSERT INTO %s (id_user, id_movie) VALUES ('%s', '%s')" % ("liked_movie", userId, movieId))
+            self.conn.commit()
+            cursor.close()
+            res['result'] = "Movie liked"
+            return res
+        except Exception as e :
+            print("error : userSeesMovie\n" + e, flush=True)
+            res['error'] = 'Internal Error user likes movie'
+            return res
+
+    def getMovieLikedByUser(self, userId):
+        res = {}
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("""SELECT * FROM liked_movie WHERE id_user = %s""", (userId))
+            account = cursor.fetchall()
+            cursor.close()
+            if (account):
+                result = []
+                for row in account:
+                    result.append(self.getMovieById(row[1]))
+                res['result'] = result
+            else:
+                res['error'] = "Not movie already seen"
+            return res
+        except Exception as e :
+            print("error : userLikeMovie\n" + str(e), flush=True)
+            return False
+
+    def isPlaylistTitleExists(self, title):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM playlist WHERE title = '%s'" % (title))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                return True
+            else:
+                return False
+        except Exception as e :
+            print("error : check playlist exists\n" + e, flush=True)
+            return "error"
+
+    def getPlaylistIdFromTitle(self, title):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM playlist WHERE title = '%s'" % (title))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                return str(account[1])
+            else:
+                return "error"
+        except Exception as e :
+            print("error : getPlaylistIdFromTitle\n" + e, flush=True)
+            return "error"
+
+    def insertMovieIntoPlaylist(self, movieId, playlistId):
+        res = {}
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("INSERT INTO %s (id_playlist, id_movie) VALUES ('%s', '%s')" % ("playlist_videos", playlistId, movieId))
+            self.conn.commit()
+            cursor.close()
+            res['result'] = "Movie inserted into playlist"
+            return res
+        except Exception as e :
+            print("error : userSeesMovie\n" + e, flush=True)
+            res['error'] = 'Internal Error user likes movie'
+            return res
+
+    def createPlaylist(self, userId, title, movieId):
+        res = {}
+        try:
+            if (self.isPlaylistTitleExists(title)):
+                cursor = self.conn.cursor()
+                cursor.execute("INSERT INTO %s (id_user, title) VALUES ('%s', '%s')" % ("playlist", userId, movieId))
+                self.conn.commit()
+                cursor.close()
+                playlistId = self.getPlaylistIdFromTitle(title)
+                self.insertMovieIntoPlaylist(movieId, playlistId)
+                res['result'] = 'Playlist created and movie inserted'
+            else:
+                res['error'] = 'Playlist title already exist'
+            return res
+        except Exception as e :
+            print("error : createPlaylist\n" + e, flush=True)
+            return False
+
+    def addToPlaylist(self, playlistId, movieId):
+        res = {}
+        try:
+            self.insertMovieIntoPlaylist(movieId, playlistId)
+            res['result'] = 'add Movie to Playlist successfull'
+        except Exception as e :
+            print("error : addToPlaylist\n" + e, flush=True)
+            res['error'] = "Error addToPlaylist"
+            return res
+

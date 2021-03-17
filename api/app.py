@@ -109,6 +109,66 @@ def getMovieByGenre():
         }
         return jsonify(error)
 
+@app.route('/api/likedMovie', methods=['POST'])
+def movieLiked():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        movieId = request.args['movieId']
+        return api.userLikesMovie(userId, movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/getMovieLiked', methods=['GET'])
+def getMovieLikedByUser():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        return api.getMovieLikedByUser(userId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/createPlaylist', methods=['GET'])
+def createPlaylist():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        title = request.args['title']
+        movieId = request.args['movieId']
+        return api.createPlaylist(userId, title, movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/addToPlaylist', methods=['GET'])
+def addToPlaylist():
+    api = API(app, get_connection())
+    try:
+        playlistId = request.args['playlistId']
+        movieId = request.args['movieId']
+        return api.addToPlaylist(playlistId, movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
 if __name__ == '__main__':
     app.secret_key = 'taker'
     app.permanent_session_lifetime = timedelta(minutes=5)
