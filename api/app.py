@@ -26,8 +26,7 @@ def register():
     try:
         email = request.args['email']
         password = request.args['password']
-        genre = request.args['genre']
-        return api.register(email, password, genre)
+        return api.register(email, password)
     except Exception as e:
         print(e)
         error = {
@@ -43,6 +42,21 @@ def login():
         email = request.args['email']
         password = request.args['password']
         return api.login(email, password)
+    except Exception as e:
+        print(e)
+        error = {
+            'status': 'Error',
+            'message': 'Error login'
+        }
+        return jsonify(error)
+
+@app.route('/api/updateGenre', methods=['POST'])
+def updateGenre():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        genre = request.args['genre']
+        return api.updateGenre(userId, genre)
     except Exception as e:
         print(e)
         error = {

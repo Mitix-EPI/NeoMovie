@@ -14,6 +14,23 @@ class API(object):
         self.app = app
         self.conn = conn
 
+    def isFirstTime(self, userId):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM user WHERE userId = '%s'" % (userId))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                if account[3] != "NULL":
+                    return False
+                else:
+                    return True
+            else:
+                return "error"
+        except Exception as e :
+            print("error : getIdFromEmail\n" + e, flush=True)
+            return "error"
+
     def getIdFromEmail(self, email):
         try:
             cursor = self.conn.cursor()
@@ -42,16 +59,16 @@ class API(object):
             print("error : check_account_exists\n" + e, flush=True)
             return "error"
 
-    def createAccount(self, email, password, genre):
+    def createAccount(self, email, password):
         try:
             hashedPassword = generateHash(password)
             cursor = self.conn.cursor()
-            cursor.execute("INSERT INTO %s (email, password, genre) VALUES ('%s', '%s', '%s')" % ("user", email, hashedPassword, genre))
+            cursor.execute("INSERT INTO %s (email, password) VALUES ('%s', '%s')" % ("user", email, hashedPassword))
             self.conn.commit()
             cursor.close()
             return True
         except Exception as e :
-            print("error : check_account_exists\n" + e, flush=True)
+            print("error : Create Account\n" + e, flush=True)
             return False
 
     def loginAccount(self, email, password):
@@ -67,7 +84,12 @@ class API(object):
                     session['id'] = account[0]
                     session['email'] = account[1]
                     res['result'] = "login successful"
-                    res['id'] = self.getIdFromEmail(email)
+                    userId = self.getIdFromEmail(email)
+                    res['id'] = userId
+                    if self.isFirstTime(userId):
+                        res['firstTime'] = True
+                    else:
+                        res['firstTime'] = False
                     return res
                 res['error'] = "login or password does not match"
                 return res
@@ -87,19 +109,33 @@ class API(object):
         res['result'] = "signout successful"
         return json.dumps(res)
 
-    def register(self, email, password, genre):
+    def register(self, email, password):
         res = {}
         isExists = self.checkAccountExists(email)
         if isExists:
             res['error'] = "account already exists"
         else:
             res['result'] = "account created"
-            self.createAccount(email, password, genre)
+            self.createAccount(email, password)
         return jsonify(res)
 
     def login(self, email, password):
         res = self.loginAccount(email, password)
         return jsonify(res)
+
+    def updateGenre(self, userId, genre):
+        res = {}
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("UPDATE %s SET genre = %s WHERE id = %s" % ("user", genre, userId))
+            self.conn.commit()
+            cursor.close()
+            res['result'] = "genre updated"
+            return res
+        except Exception as e :
+            print("error : Genre Updated\n" + e, flush=True)
+            res['error'] = "Internal error"
+            return res
 
     def userSeesMovieUpdate(self, userId, movieId):
         try:

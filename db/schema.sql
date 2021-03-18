@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `id` INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
     `email` VARCHAR(200) NOT NULL,
     `password` VARCHAR(200) NOT NULL,
-    `genre` VARCHAR(50) NOT NULL -- ('Horror', 'Science Fiction', 'Romance', 'Animation', 'Humor')
+    `genre` VARCHAR(50) DEFAULT 'NULL' -- ('Horror', 'Science Fiction', 'Romance', 'Animation', 'Humor')
 );
 
 CREATE TABLE IF NOT EXISTS `movie` (
