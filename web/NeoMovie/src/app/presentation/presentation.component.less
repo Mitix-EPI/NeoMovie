@@ -1,0 +1,39 @@
+.center {
+    height: 100%;
+    width: 100%;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    z-index: 1;
+    cursor: default;
+    position: fixed;
+    display: flex;
+}
+
+.background {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-image: url('./../../assets/background_connection.jpg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover; /* version standardisée */
+    -webkit-filter: blur(3px);
+    -webkit-background-size: cover; /* pour Chrome et Safari */
+    -moz-background-size: cover; /* pour Firefox */
+    -o-background-size: cover; /* pour Opera */
+}
+
+.overlay-text {
+    font-size: 40px;
+    color: white;
+}
+
+.button-display {
+    margin: 20px;
+}
