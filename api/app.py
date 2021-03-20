@@ -4,12 +4,15 @@ from connection import ConnectionDatabase
 from api import API
 import sys
 from datetime import timedelta
+from flask_cors import CORS
 
 app = Flask(__name__)
 
 app.config['ENV'] = 'development'
 app.config['DEBUG'] = True
 app.config['TESTING'] = True
+
+cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 conn = ConnectionDatabase(app)
 
@@ -28,7 +31,7 @@ def register():
         password = request.args['password']
         return api.register(email, password)
     except Exception as e:
-        print(e)
+        print(str(e), flush=True)
         error = {
             'status': 'Error',
             'message': 'Error register'
@@ -39,11 +42,14 @@ def register():
 def login():
     api = API(app, get_connection())
     try:
+        print("DEBUG", flush=True)
         email = request.args['email']
+        print(email, flush=True)
         password = request.args['password']
+        print(password, flush=True)
         return api.login(email, password)
     except Exception as e:
-        print(e)
+        print(str(e), flush=True)
         error = {
             'status': 'Error',
             'message': 'Error login'
@@ -54,14 +60,17 @@ def login():
 def updateGenre():
     api = API(app, get_connection())
     try:
+        print("DEBUG TYPE", flush=True)
         userId = request.args['userId']
+        print(userId, flush=True)
         genre = request.args['genre']
+        print(genre, flush=True)
         return api.updateGenre(userId, genre)
     except Exception as e:
-        print(e)
+        print(str(e), flush=True)
         error = {
             'status': 'Error',
-            'message': 'Error login'
+            'message': 'Error updateGenre'
         }
         return jsonify(error)
 

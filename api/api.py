@@ -17,10 +17,12 @@ class API(object):
     def isFirstTime(self, userId):
         try:
             cursor = self.conn.cursor()
-            cursor.execute("SELECT * FROM user WHERE userId = '%s'" % (userId))
+            cursor.execute("SELECT * FROM user WHERE id = '%s'" % (userId))
             account = cursor.fetchone()
             cursor.close()
+            print("First Time Checking : ", str(account), flush=True)
             if (account):
+                print(str(account[3]), flush=True)
                 if account[3] != "NULL":
                     return False
                 else:
@@ -28,7 +30,7 @@ class API(object):
             else:
                 return "error"
         except Exception as e :
-            print("error : getIdFromEmail\n" + e, flush=True)
+            print("error : getIdFromEmail\n" + str(e), flush=True)
             return "error"
 
     def getIdFromEmail(self, email):
@@ -42,7 +44,7 @@ class API(object):
             else:
                 return "error"
         except Exception as e :
-            print("error : getIdFromEmail\n" + e, flush=True)
+            print("error : getIdFromEmail\n" + str(e), flush=True)
             return "error"
 
     def checkAccountExists(self, email):
@@ -83,21 +85,22 @@ class API(object):
                     session['loggedin'] = True
                     session['id'] = account[0]
                     session['email'] = account[1]
-                    res['result'] = "login successful"
+                    res['result'] = "Login successful"
                     userId = self.getIdFromEmail(email)
                     res['id'] = userId
                     if self.isFirstTime(userId):
                         res['firstTime'] = True
                     else:
                         res['firstTime'] = False
+                        res['type'] = account[3]
                     return res
-                res['error'] = "login or password does not match"
+                res['error'] = "Login or password does not match"
                 return res
             else:
                 res['error'] = "Account doesn't exist"
                 return res
         except Exception as e:
-            print("error : check_signin\n" + e, flush=True)
+            print("error : check_signin\n" + str(e), flush=True)
             res['error'] = "internal error"
             return res
 
@@ -113,9 +116,9 @@ class API(object):
         res = {}
         isExists = self.checkAccountExists(email)
         if isExists:
-            res['error'] = "account already exists"
+            res['error'] = "Account already exists"
         else:
-            res['result'] = "account created"
+            res['result'] = "Account created"
             self.createAccount(email, password)
         return jsonify(res)
 
@@ -127,13 +130,13 @@ class API(object):
         res = {}
         try:
             cursor = self.conn.cursor()
-            cursor.execute("UPDATE %s SET genre = %s WHERE id = %s" % ("user", genre, userId))
+            cursor.execute("""UPDATE user SET genre = %s WHERE id = %s""", (genre, userId))
             self.conn.commit()
             cursor.close()
             res['result'] = "genre updated"
             return res
         except Exception as e :
-            print("error : Genre Updated\n" + e, flush=True)
+            print("error : Genre Updated\n" + str(e), flush=True)
             res['error'] = "Internal error"
             return res
 
@@ -188,7 +191,7 @@ class API(object):
                     result.append(self.getMovieById(row[1]))
                 res['result'] = result
             else:
-                res['error'] = "Not movie already seen"
+                res['error'] = "No watched movie"
             return res
         except Exception as e :
             print("error : userLikeMovie\n" + str(e), flush=True)
@@ -201,14 +204,14 @@ class API(object):
             cursor.execute("""SELECT * FROM movie WHERE genre = %s""", (genre))
             account = cursor.fetchall()
             cursor.close()
-            print(account, flush=True)
+            print("Genre debug", genre, account, flush=True)
             if (account):
                 res['result'] = account
             else:
-                res['error'] = "Not movie already seen"
+                res['error'] = "Not movie in this type"
             return res
         except Exception as e :
-            print("error : userLikeMovie\n" + e, flush=True)
+            print("error : Movie By Genre\n" + str(e), flush=True)
             return False
 
     def userLikesMovie(self, userId, movieId):
@@ -221,7 +224,7 @@ class API(object):
             res['result'] = "Movie liked"
             return res
         except Exception as e :
-            print("error : userSeesMovie\n" + e, flush=True)
+            print("error : userSeesMovie\n" + str(e), flush=True)
             res['error'] = 'Internal Error user likes movie'
             return res
 
@@ -238,7 +241,7 @@ class API(object):
                     result.append(self.getMovieById(row[1]))
                 res['result'] = result
             else:
-                res['error'] = "Not movie already seen"
+                res['error'] = "No movie liked"
             return res
         except Exception as e :
             print("error : userLikeMovie\n" + str(e), flush=True)
