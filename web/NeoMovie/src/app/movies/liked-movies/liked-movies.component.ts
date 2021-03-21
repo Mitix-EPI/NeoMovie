@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AccountService, AlertService } from '@app/services';
 import { first } from 'rxjs/operators';
 
@@ -14,7 +15,8 @@ export class LikedMoviesComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
     ) {
     this.user = this.accountService.userValue;
 }
@@ -24,8 +26,11 @@ export class LikedMoviesComponent implements OnInit {
     .pipe(first())
     .subscribe(
         (movies) => {
-            this.moviesList = movies
-            console.log(movies);
+            if (Array.isArray(movies[0]))
+              this.moviesList = movies
+            else
+              this.moviesList = [movies]
+            console.log(this.moviesList);
         },
         (error) => {
             this.alertService.error(error);
@@ -35,6 +40,13 @@ export class LikedMoviesComponent implements OnInit {
 
   goToMovie(movieId) {
     console.log('Clicked', movieId);
+    this.router.navigate(['/movie', movieId]);
   }
 
+  getImgUrl(movieTitle) {
+    console.log("getImgUrl", movieTitle);
+    const res = "url(../../assets/movies/" + movieTitle.toLowerCase().split(' ').join('-') + '.jpg)';
+    console.log('Res', res);
+    return res;
+  }
 }

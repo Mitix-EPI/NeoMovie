@@ -1,0 +1,26 @@
+<div class="movie-card" *ngIf="movie">
+    <div class="container">
+        <img src="{{ getImgUrl(movie[1]) }}" alt="cover" class="cover" style="height: 50%;" />
+        <div class="hero">
+            <div class="details">
+                <div class="title1">{{ movie[1] }} <span>{{movie[4]}}</span></div>
+                <div class="title2">{{ movie[8] }}</div>
+            </div> <!-- end details -->
+        </div> <!-- end hero -->
+        <div class="description">
+            <div class="column1">
+                <span class="tag">{{movie[5]}}</span>
+            </div> <!-- end column1 -->
+            <div class="column2">
+                <p>{{ movie[2] }}</p>
+                <div class="avatars">
+                    <button type="button" [disabled]="movieWatched" class="btn btn-primary btn-lg button-display" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="watchMovie()">Watch Movie</button>
+                    <button type="button" class="btn btn-danger btn-lg button-display" data-toggle="button" aria-pressed="false" autocomplete="off" (click)="likeMovie()">{{ movieLiked === false ? "Like Movie" : "Unlike Movie"}}</button>
+                </div>
+            </div> <!-- end column2 -->
+        </div> <!-- end description -->
+    </div> <!-- end container -->
+    <div class="container" style="margin-top: 60px;">
+        <youtube-player videoId="{{ getVideoId(movie[6]) }}"></youtube-player>
+    </div>
+</div> <!-- end movie-card -->

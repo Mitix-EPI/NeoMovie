@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AccountService, AlertService } from '@app/services';
 import { first } from 'rxjs/operators';
 
@@ -14,7 +15,8 @@ export class PlaylistComponent implements OnInit {
 
   constructor(
     private accountService: AccountService,
-    private alertService: AlertService
+    private alertService: AlertService,
+    private router: Router
     ) {
     this.user = this.accountService.userValue;
 }
@@ -35,6 +37,7 @@ export class PlaylistComponent implements OnInit {
 
   goToMovie(movieId) {
     console.log('Clicked', movieId);
+    this.router.navigate(['/movie', movieId]);
   }
 
 }

@@ -165,18 +165,22 @@ class API(object):
             return False
 
     def getMovieById(self, movieId):
+        res = {}
         try:
             cursor = self.conn.cursor()
             cursor.execute("""SELECT * FROM movie WHERE id = %s""", (movieId))
             account = cursor.fetchone()
             cursor.close()
             if (account):
-                return account
+                res['result'] = account
+                return res
             else:
-                return False
+                res['error'] = "No movie with this id"
+                return res
         except Exception as e :
-            print("error : userLikeMovie\n" + str(e), flush=True)
-            return False
+            print("error : get Movie By id\n" + str(e), flush=True)
+            res['error'] = "Internal Error"
+            return res
 
     def getMovieSeenByUser(self, userId):
         res = {}
@@ -188,18 +192,20 @@ class API(object):
             if (account):
                 result = []
                 for row in account:
-                    result.append(self.getMovieById(row[1]))
+                    result.append(self.getMovieById(row[1])['result'])
                 res['result'] = result
             else:
                 res['error'] = "No watched movie"
             return res
         except Exception as e :
             print("error : userLikeMovie\n" + str(e), flush=True)
-            return False
+            res['error'] = "Internal Error"
+            return res
 
     def getMovieByGenre(self, genre):
         res = {}
         try:
+            print("DEBUG GENRE", genre, flush=True)
             cursor = self.conn.cursor()
             cursor.execute("""SELECT * FROM movie WHERE genre = %s""", (genre))
             account = cursor.fetchall()
@@ -212,7 +218,63 @@ class API(object):
             return res
         except Exception as e :
             print("error : Movie By Genre\n" + str(e), flush=True)
-            return False
+            res['error'] = "Internal Error"
+            return res
+
+    def getAllMovies(self):
+        res = {}
+        try:
+            print("DEBUG ALL MOVIES", flush=True)
+            cursor = self.conn.cursor()
+            cursor.execute("SELECT * FROM movie")
+            account = cursor.fetchall()
+            cursor.close()
+            print(account, flush=True)
+            if (account):
+                res['result'] = account
+            else:
+                res['error'] = "No movie disponible"
+            return res
+        except Exception as e :
+            print("error : All Movies\n" + str(e), flush=True)
+            res['error'] = "Internal Error"
+            return res
+
+    def isUserLikedMovie(self, userId, movieId):
+        res = {}
+        try:
+            print("DEBUG isUserLikedMovie", flush=True)
+            cursor = self.conn.cursor()
+            cursor.execute("""SELECT * FROM liked_movie WHERE id_user = %s AND id_movie = %s""", (userId, movieId))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                res['result'] = True
+            else:
+                res['result'] = False
+            return res
+        except Exception as e :
+            print("error : isUserLikedMovie\n" + str(e), flush=True)
+            res['error'] = "Internal Error"
+            return res
+
+    def isUserWatchedMovie(self, userId, movieId):
+        res = {}
+        try:
+            print("DEBUG isUserWatchedMovie", flush=True)
+            cursor = self.conn.cursor()
+            cursor.execute("""SELECT * FROM seen_movie WHERE id_user = %s AND id_movie = %s""", (userId, movieId))
+            account = cursor.fetchone()
+            cursor.close()
+            if (account):
+                res['result'] = True
+            else:
+                res['result'] = False
+            return res
+        except Exception as e :
+            print("error : isUserWatchedMovie\n" + str(e), flush=True)
+            res['error'] = "Internal Error"
+            return res
 
     def userLikesMovie(self, userId, movieId):
         res = {}
@@ -224,7 +286,21 @@ class API(object):
             res['result'] = "Movie liked"
             return res
         except Exception as e :
-            print("error : userSeesMovie\n" + str(e), flush=True)
+            print("error : userLikesMovie\n" + str(e), flush=True)
+            res['error'] = 'Internal Error user likes movie'
+            return res
+
+    def userDislikesMovie(self, userId, movieId):
+        res = {}
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute("DELETE FROM %s WHERE id_user = %s AND id_movie = %s" % ("liked_movie", userId, movieId))
+            self.conn.commit()
+            cursor.close()
+            res['result'] = "Movie unliked"
+            return res
+        except Exception as e :
+            print("error : userDislikesMovie\n" + str(e), flush=True)
             res['error'] = 'Internal Error user likes movie'
             return res
 
@@ -238,7 +314,7 @@ class API(object):
             if (account):
                 result = []
                 for row in account:
-                    result.append(self.getMovieById(row[1]))
+                    result.append(self.getMovieById(row[1])['result'])
                 res['result'] = result
             else:
                 res['error'] = "No movie liked"
@@ -285,7 +361,7 @@ class API(object):
             res['result'] = "Movie inserted into playlist"
             return res
         except Exception as e :
-            print("error : userSeesMovie\n" + e, flush=True)
+            print("error : insertMovieIntoPlaylist\n" + e, flush=True)
             res['error'] = 'Internal Error user likes movie'
             return res
 

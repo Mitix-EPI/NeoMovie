@@ -13,11 +13,12 @@ import { AlertComponent } from './components';
 import { HomeComponent } from './home';;
 import { PresentationComponent } from './presentation/presentation.component'
 import { FilterPipe } from './filter.pipe';;
-import { LikedMoviesComponent } from './movies/liked-movies/liked-movies.component'
-;
-import { WatchedMoviesComponent } from './movies/watched-movies/watched-movies.component'
-;
-import { PlaylistComponent } from './movies/playlist/playlist.component'
+import { LikedMoviesComponent } from './movies/liked-movies/liked-movies.component';
+import { WatchedMoviesComponent } from './movies/watched-movies/watched-movies.component';
+import { PlaylistComponent } from './movies/playlist/playlist.component';
+import { MovieComponent } from './movies/movie/movie.component';
+import { YouTubePlayerModule } from '@angular/youtube-player';
+
 @NgModule({
     imports: [
         BrowserModule,
@@ -25,6 +26,7 @@ import { PlaylistComponent } from './movies/playlist/playlist.component'
         FormsModule,
         HttpClientModule,
         AppRoutingModule,
+        YouTubePlayerModule
     ],
     declarations: [
         AppComponent,
@@ -34,7 +36,8 @@ import { PlaylistComponent } from './movies/playlist/playlist.component'
         PresentationComponent ,
         LikedMoviesComponent ,
         WatchedMoviesComponent ,
-        PlaylistComponent ],
+        PlaylistComponent ,
+        MovieComponent],
     providers: [
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },

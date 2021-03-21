@@ -132,6 +132,33 @@ def getMovieByGenre():
         }
         return jsonify(error)
 
+@app.route('/api/getAllMovies', methods=['GET'])
+def getAllMovies():
+    api = API(app, get_connection())
+    try:
+        return api.getAllMovies()
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/getMovieById', methods=['GET'])
+def getMovieById():
+    api = API(app, get_connection())
+    try:
+        movieId = request.args['movieId']
+        return api.getMovieById(movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
 @app.route('/api/likedMovie', methods=['POST'])
 def movieLiked():
     api = API(app, get_connection())
@@ -139,6 +166,51 @@ def movieLiked():
         userId = request.args['userId']
         movieId = request.args['movieId']
         return api.userLikesMovie(userId, movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/dislikedMovie', methods=['POST'])
+def movieDisliked():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        movieId = request.args['movieId']
+        return api.userDislikesMovie(userId, movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/isUserLikedMovie', methods=['GET'])
+def isUserLikedMovie():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        movieId = request.args['movieId']
+        return api.isUserLikedMovie(userId, movieId)
+    except Exception as e:
+        print(str(e), flush=True)
+        error = {
+            'status': 'Error',
+            'message': str(e)
+        }
+        return jsonify(error)
+
+@app.route('/api/isUserWatchedMovie', methods=['GET'])
+def isUserWatchedMovie():
+    api = API(app, get_connection())
+    try:
+        userId = request.args['userId']
+        movieId = request.args['movieId']
+        return api.isUserWatchedMovie(userId, movieId)
     except Exception as e:
         print(str(e), flush=True)
         error = {

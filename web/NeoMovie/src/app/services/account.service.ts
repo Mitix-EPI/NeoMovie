@@ -107,6 +107,22 @@ export class AccountService {
         }));
     }
 
+    getAllMovies() {
+        const header = {
+            header: "Access-Control-Allow-Headers",
+            params: {
+            }
+        };
+        return this.http.get<any>(`${environment.apiUrl}/getAllMovies`, header)
+        .pipe(map(res => {
+            if (res["error"]) {
+                throw res["error"];
+            } else {
+                return res.result;
+            }
+        }));
+    }
+
     getMovieByType(type) {
         const header = {
             header: "Access-Control-Allow-Headers",
@@ -114,8 +130,24 @@ export class AccountService {
                 genre: type
             }
         };
-        console.log("getMovieByType ", type);
         return this.http.get<any>(`${environment.apiUrl}/getMoviesByGenre`, header)
+        .pipe(map(res => {
+            if (res["error"]) {
+                throw res["error"];
+            } else {
+                return res.result;
+            }
+        }));
+    }
+
+    getMovieById(movieId) {
+        const header = {
+            header: "Access-Control-Allow-Headers",
+            params: {
+                movieId: movieId
+            }
+        };
+        return this.http.get<any>(`${environment.apiUrl}/getMovieById`, header)
         .pipe(map(res => {
             if (res["error"]) {
                 throw res["error"];
@@ -170,6 +202,113 @@ export class AccountService {
         };
         console.log("getWatchedMovies ", userId);
         return this.http.get<any>(`${environment.apiUrl}/getMovieSeen`, header)
+        .pipe(map(res => {
+            if (res["error"]) {
+                throw res["error"];
+            } else {
+                return res.result;
+            }
+        }));
+    }
+
+    watchMovie(movieId) {
+        const header = {
+            header: "Access-Control-Allow-Headers",
+            params: {
+                userId: this.userValue.id,
+                movieId: movieId
+            }
+        };
+        const body = {
+            userId: this.userValue.id,
+            movieId: movieId
+        };
+        console.log("like Movie ", body);
+        return this.http.post(`${environment.apiUrl}/movieSeen`, body, header)
+        .pipe(map(res => {
+            if (res["error"]) {
+                throw res["error"];
+            } else {
+                return res;
+            }
+        }));
+    }
+
+    likeMovie(movieId) {
+        const header = {
+            header: "Access-Control-Allow-Headers",
+            params: {
+                userId: this.userValue.id,
+                movieId: movieId
+            }
+        };
+        const body = {
+            userId: this.userValue.id,
+            movieId: movieId
+        };
+        console.log("like Movie ", body);
+        return this.http.post(`${environment.apiUrl}/likedMovie`, body, header)
+        .pipe(map(res => {
+            if (res["error"]) {
+                throw res["error"];
+            } else {
+                return res;
+            }
+        }));
+    }
+
+    dislikeMovie(movieId) {
+        const header = {
+            header: "Access-Control-Allow-Headers",
+            params: {
+                userId: this.userValue.id,
+                movieId: movieId
+            }
+        };
+        const body = {
+            userId: this.userValue.id,
+            movieId: movieId
+        };
+        console.log("like Movie ", body);
+        return this.http.post(`${environment.apiUrl}/dislikedMovie`, body, header)
+        .pipe(map(res => {
+            if (res["error"]) {
+                throw res["error"];
+            } else {
+                return res;
+            }
+        }));
+    }
+
+    isUserLikedMovies(movieId) {
+        const header = {
+            header: "Access-Control-Allow-Headers",
+            params: {
+                userId: this.userValue.id,
+                movieId: movieId
+            }
+        };
+        console.log("isUserLikedMovies ", movieId);
+        return this.http.get<any>(`${environment.apiUrl}/isUserLikedMovie`, header)
+        .pipe(map(res => {
+            if (res["error"]) {
+                throw res["error"];
+            } else {
+                return res.result;
+            }
+        }));
+    }
+
+    isUserWatchedMovie(movieId) {
+        const header = {
+            header: "Access-Control-Allow-Headers",
+            params: {
+                userId: this.userValue.id,
+                movieId: movieId
+            }
+        };
+        console.log("isUserLikedMovies ", movieId);
+        return this.http.get<any>(`${environment.apiUrl}/isUserWatchedMovie`, header)
         .pipe(map(res => {
             if (res["error"]) {
                 throw res["error"];
