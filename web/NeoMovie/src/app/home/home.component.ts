@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
     moviesList;
     moviesTypeList;
     searchText: string;
-    filtersBox: Array<String> = ['None', 'Date', 'Type', 'Langage'];
+    filtersBox: Array<String> = ['None', 'Horror', 'Science Fiction', 'Romance', 'Animation', 'Humor'];
     selectedFilter: String = 'None';
 
     constructor(
@@ -32,6 +32,7 @@ export class HomeComponent implements OnInit {
             (movies) => {
                 console.log("AllMovies", movies);
                 this.moviesList = movies
+                console.log("User Type", this.user.type);
                 this.accountService.getMovieByType(this.user.type)
                 .pipe(first())
                 .subscribe(
@@ -52,15 +53,22 @@ export class HomeComponent implements OnInit {
     }
 
     goToMovie(movieId) {
-        console.log('Clicked', movieId);
         this.router.navigate(['/movie', movieId]);
     }
 
     getImgUrl(movieTitle) {
-        console.log("getImgUrl", movieTitle);
         const res = "url(../../assets/movies/" + movieTitle.toLowerCase().split(' ').join('-') + '.jpg)';
-        console.log('Res', res);
         return res;
+    }
+
+    filterMovie(movie) {
+        console.log(movie);
+        if (this.selectedFilter == 'None')
+            return true;
+        if (this.selectedFilter == movie[5])
+            return true;
+        else
+            return false;
     }
 
 

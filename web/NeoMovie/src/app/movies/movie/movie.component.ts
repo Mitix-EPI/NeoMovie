@@ -57,9 +57,7 @@ export class MovieComponent implements OnInit {
 
 
   getVideoId(url) {
-    console.log("GetVideoId", url);
     const res = url.replace("https://www.youtube.com/watch?v=", "");
-    console.log("GetVideoId", res);
     return res;
   }
 

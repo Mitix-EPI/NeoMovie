@@ -60,35 +60,37 @@
         <div class="row" *ngIf="((moviesList | filterSearch: searchText).length > 0); else noResults">
             <!-- [ngStyle]="{background: 'url(../../assets/movies/' + getImgUrl(movie[1]) + '.jpg)'; background-size: cover}" -->
             <!-- Movie Card Start -->
-            <div class="card-view" *ngFor="let movie of moviesList  | filterSearch: searchText">
-                <div class="card-header" [style.background]="getImgUrl(movie[1])"
-                [style.background-size]="'cover'">
-                    <div class="card-header-icon">
-                        <a (click)="goToMovie(movie[0])">
-                            <i class="material-icons header-icon">play_arrow</i>
-                        </a>
-                    </div>
-                </div>
-
-                <div class="card-movie-content">
-                    <div class="card-movie-content-head">
-                        <a (click)="goToMovie(movie[0])">
-                            <h3 class="card-movie-title">{{ movie[1] }}</h3>
-                        </a>
-                        <div class="ratings"><span>{{ movie[7] }}</span>/10</div>
-                    </div>
-                    <div class="card-movie-info">
-                        <div class="movie-running-time">
-                            <label>Release Date</label>
-                            <span>{{ movie[3] }}</span>
-                        </div>
-                        <div class="movie-running-time">
-                            <label>Running time</label>
-                            <span>{{ movie[8] }}</span>
+            <ng-container *ngFor="let movie of moviesList  | filterSearch: searchText">
+            <div class="card-view" *ngIf="filterMovie(movie)">
+                    <div class="card-header" [style.background]="getImgUrl(movie[1])"
+                    [style.background-size]="'cover'">
+                        <div class="card-header-icon">
+                            <a (click)="goToMovie(movie[0])">
+                                <i class="material-icons header-icon">play_arrow</i>
+                            </a>
                         </div>
                     </div>
+    
+                    <div class="card-movie-content">
+                        <div class="card-movie-content-head">
+                            <a (click)="goToMovie(movie[0])">
+                                <h3 class="card-movie-title">{{ movie[1] }}</h3>
+                            </a>
+                            <div class="ratings"><span>{{ movie[7] }}</span>/10</div>
+                        </div>
+                        <div class="card-movie-info">
+                            <div class="movie-running-time">
+                                <label>Release Date</label>
+                                <span>{{ movie[3] }}</span>
+                            </div>
+                            <div class="movie-running-time">
+                                <label>Running time</label>
+                                <span>{{ movie[8] }}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            </ng-container>
 
         </div>
         <ng-template #noResults>
