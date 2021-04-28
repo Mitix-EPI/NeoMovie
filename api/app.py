@@ -267,4 +267,4 @@ def addToPlaylist():
 if __name__ == '__main__':
     app.secret_key = 'taker'
     app.permanent_session_lifetime = timedelta(minutes=5)
-    app.run(host='0.0.0.0', port=80, debug=True, threaded=True)
+    app.run(host='0.0.0.0', port=80, threaded=True)
