@@ -5,9 +5,9 @@
 A simple example of a web application about movies. You can register and log in you to select your favorites movies and group them in one place.
 
 ## Table of Contents
-- 1. [Getting Started](#getting-started)
-- 2. [Website Presentation](#website-pres)
-- 3. [License](#license)
+1. [Getting Started](#getting-started)
+2. [Website Presentation](#website-pres)
+3. [License](#license)
 
 ## Getting Started
 
