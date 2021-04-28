@@ -102,6 +102,10 @@ export class AccountService {
             if (res["error"]) {
                 throw res["error"];
             } else {
+                let user = this.userValue.type;
+                user.type = type;
+                localStorage.setItem('user', JSON.stringify(user));
+                this.userSubject.next(user);
                 return res;
             }
         }));
@@ -130,6 +134,7 @@ export class AccountService {
                 genre: type
             }
         };
+        console.log("DEBUG getMovieByType : ", type);
         return this.http.get<any>(`${environment.apiUrl}/getMoviesByGenre`, header)
         .pipe(map(res => {
             if (res["error"]) {
