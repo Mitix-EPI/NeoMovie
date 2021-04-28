@@ -1,6 +1,6 @@
 # :movie_camera: Movie Web App Example :movie_camera:
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Badge Web](https://img.shields.io/badge/Web-Angular-red?logo=angular) ![Badge API](https://img.shields.io/badge/API-Flask-green?logo=Python) ![Badge API](https://img.shields.io/badge/Database-MySQL-blue?logo=MySQL) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 A simple example of a web application about movies. You can register and log in you to select your favorites movies and group them in one place.
 
